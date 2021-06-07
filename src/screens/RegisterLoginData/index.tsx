@@ -28,8 +28,10 @@ const schema = Yup.object().shape({
   password: Yup.string().required('Senha é obrigatória!'),
 })
 
+import {  useLogins } from "../../hooks/logins";
+
 export function RegisterLoginData() {
-  const dataKey = "@passmanager:logins";
+  const  { setLogin   } = useLogins();
   const {
     control,
     handleSubmit,
@@ -47,16 +49,7 @@ export function RegisterLoginData() {
       id: String(uuid.v4()),
       ...formData
     }
-    const response = await AsyncStorage.getItem(dataKey);
-    const logins = response ? JSON.parse(response) : [];
-    const Data = [
-      ...logins,
-      newLoginData
-    ]
-
-    await AsyncStorage.setItem(dataKey , JSON.stringify(Data))
-
-
+    await setLogin(newLoginData)
     // Save data on AsyncStorage
   }
 

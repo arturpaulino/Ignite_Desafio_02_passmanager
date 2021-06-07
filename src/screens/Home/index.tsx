@@ -4,6 +4,7 @@ import { useFocusEffect } from '@react-navigation/native';
 
 import { SearchBar } from '../../components/SearchBar';
 import { LoginDataItem } from '../../components/LoginDataItem';
+import {  useLogins } from "../../hooks/logins";
 
 import {
   Container,
@@ -24,22 +25,15 @@ type LoginListDataProps = LoginDataProps[];
 export function Home() {
    const [searchListData, setSearchListData] = useState<LoginListDataProps>([]);
    const [data, setData] = useState<LoginListDataProps>([]);
-   const dataKey = "@passmanager:logins";
+   const  { getLogins   } = useLogins();
 
   async function loadData() {
-    const response = await AsyncStorage.getItem(dataKey);
-    const transactions= response ? JSON.parse(response) : [];
-
-    if (response) {
-      setSearchListData(transactions)
-      setData(transactions)
-    }
+       const data = await getLogins()
+      setSearchListData(data)
+      setData(data)
   }
-  /*
-  useEffect(() => {
-    loadData();
-  }, []);
-*/
+
+
   useFocusEffect(useCallback(() => {
     loadData();
   }, []));
